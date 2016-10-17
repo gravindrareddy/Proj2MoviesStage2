@@ -1,4 +1,4 @@
-package udacity.redgun.moviesstage2;
+package redgun.moviesstage2;
 
 import org.junit.Test;
 

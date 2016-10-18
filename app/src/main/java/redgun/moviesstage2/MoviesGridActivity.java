@@ -160,7 +160,7 @@ public class MoviesGridActivity extends AppCompatActivity {
                     InputStream inputStream = urlConnection.getInputStream();
                     if (urlConnection.getResponseCode() == 200) {
                         Gson gson = new GsonBuilder().create();
-                        APIResponse moviesResponse = gson.fromJson(new BufferedReader(new InputStreamReader(inputStream)), APIResponse.class);
+                        APIResponseContract.MoviesAPIResponseEntry moviesResponse = gson.fromJson(new BufferedReader(new InputStreamReader(inputStream)), APIResponseContract.MoviesAPIResponseEntry.class);
                         moviesList = moviesResponse.movies;
 
                     } else {

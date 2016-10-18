@@ -26,6 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/movie_title_tv"
+            android:background="@android:drawable/alert_dark_frame"
             android:gravity="left"
             android:padding="@dimen/padding_small" />
 
@@ -33,16 +34,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/movie_title_tv"
-            android:layout_toRightOf="@id/movie_poster_iv"
             android:layout_gravity="center_vertical"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:layout_toRightOf="@id/movie_poster_iv"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/movie_release_date_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                                android:gravity="center"
+                android:gravity="center"
                 android:padding="@dimen/padding_small"
                 android:text="Date"
                 android:textSize="@dimen/text_movie_details_default"
@@ -69,6 +70,20 @@
             android:padding="@dimen/padding_small"
             android:text="Synopsis"
             android:textSize="@dimen/text_movie_details_synopsis" />
+
+        <ListView
+            android:id="@+id/movie_trailers_lv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </ListView>
+
+        <ListView
+            android:id="@+id/movie_reviews_lv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </ListView>
 
     </RelativeLayout>
 </ScrollView>

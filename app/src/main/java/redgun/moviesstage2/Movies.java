@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 /**
  * Created by gravi on 29-09-2016.
  */
@@ -25,6 +27,9 @@ public class Movies implements Parcelable {
 
     @SerializedName("release_date")
     String movieReleaseDate;
+
+    ArrayList<String> movieTrailers;
+    ArrayList<MovieReviews> movieReviews;
 
 
     Movies(String movieTitle, String moviePoster, String movieOverview, double averageRating, String movieReleaseDate) {

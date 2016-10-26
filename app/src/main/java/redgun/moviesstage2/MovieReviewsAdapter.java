@@ -68,7 +68,7 @@ public class MovieReviewsAdapter extends BaseAdapter {
         }
         //TODO Use Picasso example
         holder.movie_review_content_tv.setText(result.get(position).getReview());
-        holder.movie_review_content_tv.setText(result.get(position).getReviewer());
+        holder.movie_reviewer_tv.setText(result.get(position).getReviewer());
         return rowView;
     }
 

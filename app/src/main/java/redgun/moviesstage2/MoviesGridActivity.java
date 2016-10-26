@@ -51,7 +51,7 @@ public class MoviesGridActivity extends AppCompatActivity {
                 // Send intent to SingleViewActivity
                 Intent i = new Intent(getApplicationContext(), MovieDetailActivity.class);
                 Movies selectedMovie = moviesList.get(position);
-                Movies parcelMovie = new Movies(selectedMovie.getMovieTitle(), selectedMovie.getMoviePoster(), selectedMovie.getMovieOverview(), selectedMovie.getAverageRating(), selectedMovie.getMovieReleaseDate());
+                Movies parcelMovie = new Movies(selectedMovie.getMovieId(), selectedMovie.getMovieTitle(), selectedMovie.getMoviePoster(), selectedMovie.getMovieOverview(), selectedMovie.getAverageRating(), selectedMovie.getMovieReleaseDate());
                 i.putExtra("parcelMovie", parcelMovie);
                 startActivity(i);
             }

@@ -2,11 +2,14 @@ package redgun.moviesstage2;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -29,22 +32,21 @@ import udacity.redgun.moviesstage2.R;
  */
 
 
-public class MovieTrailersAsyncTask extends AsyncTask<String, Void, ArrayList<String>> {
+public class MovieVideosAsyncTask extends AsyncTask<MovieVideos, Void, ArrayList<MovieVideos>> {
 
-    private final String LOG_TAG = MovieTrailersAsyncTask.class.getSimpleName();
-    private final String MESSAGE = "MovieDetails";
-    private final String REVIEW_MESSAGE = "ReviewDetails";
+    private final String LOG_TAG = MovieVideosAsyncTask.class.getSimpleName();
     private final Context mContext;
+    private final String mMovieId;
     private ListView movie_trailers_lv;
 
-    public MovieTrailersAsyncTask(Context context, ListView movie_trailers_lv) {
+    public MovieVideosAsyncTask(Context context, String movieId, ListView movie_trailers_lv) {
         mContext = context;
+        mMovieId = movieId;
         this.movie_trailers_lv = movie_trailers_lv;
     }
 
-    private boolean DEBUG = true;
-    private ProgressDialog progress;
     private volatile boolean running = true;
+    private ProgressDialog progress;
 
     protected void onPreExecute() {
         if (Utility.isOnline(mContext)) {
@@ -62,13 +64,13 @@ public class MovieTrailersAsyncTask extends AsyncTask<String, Void, ArrayList<St
     }
 
     @Override
-    protected ArrayList<String> doInBackground(String... params) {
-        ArrayList<String> moviesTrailersList = new ArrayList<String>();
+    protected ArrayList<MovieVideos> doInBackground(MovieVideos... params) {
+        ArrayList<MovieVideos> moviesTrailersList = new ArrayList<MovieVideos>();
         if (!isCancelled()) {
             // URL for calling the API is needed
             final String OWM_APIKEY = "api_key";
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            String sort_by = prefs.getString(mContext.getString(R.string.pref_sort_key), mContext.getString(R.string.pref_sort_top));
+            //String sort_by = prefs.getString(mContext.getString(R.string.pref_sort_key), mContext.getString(R.string.pref_sort_top));
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             String moviesJsonStr = null;
@@ -78,9 +80,11 @@ public class MovieTrailersAsyncTask extends AsyncTask<String, Void, ArrayList<St
                         .authority(mContext.getResources().getString(R.string.base_url))
                         .appendPath(mContext.getResources().getString(R.string.base_url_add1))
                         .appendPath(mContext.getResources().getString(R.string.base_url_add2))
-                        .appendPath(sort_by)
+                        .appendPath(mMovieId)
+                        .appendPath(mContext.getResources().getString(R.string.base_url_videos))
                         .appendQueryParameter(OWM_APIKEY, BuildConfig.MOVIES_DB_API_KEY);
                 URL url = new URL(builder.build().toString());
+                Log.i("VideosAynscTask", url.getPath());
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -99,7 +103,7 @@ public class MovieTrailersAsyncTask extends AsyncTask<String, Void, ArrayList<St
             } catch (IOException e) {
                 Log.e("PlaceholderFragment", "Error ", e);
                 e.printStackTrace();
-                // If the code didn't successfully get the weather data, there's no point in attemping
+                // If the code didn't successfully get the data, there's no point in attempting
                 // to parse it.
                 return null;
             } finally {
@@ -121,12 +125,22 @@ public class MovieTrailersAsyncTask extends AsyncTask<String, Void, ArrayList<St
 
     // onPostExecute displays the results of the AsyncTask.
     @Override
-    protected void onPostExecute(final ArrayList<String> responseMovieTrailersList) {
+    protected void onPostExecute(final ArrayList<MovieVideos> responseMovieTrailersList) {
         if (responseMovieTrailersList == null) {
-            Utility.showToast(mContext, "No Movies Available. Please try again");
+            //    Utility.showToast(mContext, "No Movies Available. Please try again");
         } else {
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, R.layout.movies_list_trailer_item, R.id.movie_trailer_yv, responseMovieTrailersList);
-            movie_trailers_lv.setAdapter(adapter);
+            MovieVideosAdapter madapter = new MovieVideosAdapter(mContext, responseMovieTrailersList);
+            movie_trailers_lv.setAdapter(madapter);
+            madapter.notifyDataSetChanged();
+            //movie_trailers_lv.notify();
+            movie_trailers_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    // Send intent to SingleViewActivity
+                    Intent i = new Intent(mContext, MovieVideoActivity.class);
+                    i.putExtra("videoKey", responseMovieTrailersList.get(position).getKey());
+                    mContext.startActivity(i);
+                }
+            });
         }
         progress.dismiss();
     }

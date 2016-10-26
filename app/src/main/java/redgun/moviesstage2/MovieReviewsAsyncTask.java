@@ -122,7 +122,7 @@ public class MovieReviewsAsyncTask extends AsyncTask<String, Void, ArrayList<Mov
     @Override
     protected void onPostExecute(final ArrayList<MovieReviews> responseMovieReviewsList) {
         if (responseMovieReviewsList == null) {
-            Utility.showToast(mContext, "No Movies Available. Please try again");
+            //Utility.showToast(mContext, "No Movies Available. Please try again");
         } else {
             movie_reviews_lv.setAdapter(new MovieReviewsAdapter(mContext, responseMovieReviewsList));
         }

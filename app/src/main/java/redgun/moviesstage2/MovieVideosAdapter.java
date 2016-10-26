@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.google.android.youtube.player.YouTubePlayerView;
 
@@ -17,14 +17,13 @@ import udacity.redgun.moviesstage2.R;
 /**
  * Created by gravi on 30-09-2016.
  */
-public class MovieTrailersAdapter extends BaseAdapter {
-
+public class MovieVideosAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
-    ArrayList<String> result;
+    ArrayList<MovieVideos> result;
     Context context;
 
-    public MovieTrailersAdapter(Context context, ArrayList<String> moviesTrailersArrayList) {
+    public MovieVideosAdapter(Context context, ArrayList<MovieVideos> moviesTrailersArrayList) {
         // TODO Auto-generated constructor stub
         result = moviesTrailersArrayList;
         this.context = context;
@@ -56,9 +55,9 @@ public class MovieTrailersAdapter extends BaseAdapter {
         Holder holder;
         View rowView = convertView;
         if (rowView == null) {
-            rowView = inflater.inflate(R.layout.movies_list_trailer_item, parent, false);
+            rowView = inflater.inflate(R.layout.movies_list_video_icon_item, parent, false);
             holder = new Holder();
-            holder.movie_trailer_yv = (YouTubePlayerView) rowView.findViewById(R.id.movie_trailer_yv);
+            holder.movie_video_icon_iv = (ImageView) rowView.findViewById(R.id.movie_video_icon_iv);
             rowView.setTag(holder);
         } else {
             holder = (Holder) convertView.getTag();
@@ -68,7 +67,7 @@ public class MovieTrailersAdapter extends BaseAdapter {
     }
 
     public class Holder {
-        YouTubePlayerView movie_trailer_yv;
+        ImageView movie_video_icon_iv;
     }
 
 }

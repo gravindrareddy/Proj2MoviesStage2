@@ -73,16 +73,16 @@
 
         <ListView
             android:id="@+id/movie_trailers_lv"
+            android:layout_below="@id/movie_synopsis_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
         </ListView>
 
         <ListView
             android:id="@+id/movie_reviews_lv"
+            android:layout_below="@id/movie_trailers_lv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
         </ListView>
 
     </RelativeLayout>

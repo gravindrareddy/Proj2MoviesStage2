@@ -22,6 +22,6 @@ public class APIResponseContract {
 
     static class MovieTrailersAPIResponseEntry {
         @SerializedName("results")
-        public ArrayList<String> movieTrailers;
+        public ArrayList<MovieVideos> movieTrailers;
     }
 }

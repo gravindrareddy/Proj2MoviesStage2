@@ -68,7 +68,6 @@ public class MoviesGridAdapter extends BaseAdapter {
         //TODO Use Picasso example
         // holder.grid_movie_poster_iv.(result.get(position).getMoviePoster());
         Picasso.with(context).load(context.getResources().getString(R.string.base_image_url).concat(result.get(position).getMoviePoster())).into(holder.grid_movie_poster_iv);
-        Log.i("MovieGripAdapter", context.getResources().getString(R.string.base_image_url).concat(result.get(position).getMoviePoster()));
         return rowView;
     }
 

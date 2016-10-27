@@ -17,11 +17,29 @@ public class MovieReviews implements Parcelable {
     @SerializedName("author")
     String reviewer;
 
-
     protected MovieReviews(Parcel in) {
         review = in.readString();
         reviewer = in.readString();
     }
+
+    public String getReview() {
+        return review;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
+    }
+
+    public String getReviewer() {
+        return reviewer;
+    }
+
+    public void setReviewer(String reviewer) {
+        this.reviewer = reviewer;
+    }
+
+
+
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -46,20 +64,6 @@ public class MovieReviews implements Parcelable {
         }
     };
 
-    public String getReview() {
-        return review;
-    }
 
-    public void setReview(String review) {
-        this.review = review;
-    }
-
-    public String getReviewer() {
-        return reviewer;
-    }
-
-    public void setReviewer(String reviewer) {
-        this.reviewer = reviewer;
-    }
 
 }

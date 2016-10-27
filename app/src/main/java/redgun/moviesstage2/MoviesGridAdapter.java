@@ -60,7 +60,6 @@ public class MoviesGridAdapter extends BaseAdapter {
             rowView = inflater.inflate(R.layout.movies_grid_item, parent, false);
             holder = new Holder();
             holder.grid_movie_poster_iv = (ImageView) rowView.findViewById(R.id.grid_movie_poster_iv);
-
             rowView.setTag(holder);
         } else {
             holder = (Holder) convertView.getTag();

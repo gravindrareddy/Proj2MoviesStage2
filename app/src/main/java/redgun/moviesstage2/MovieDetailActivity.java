@@ -10,9 +10,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -43,7 +40,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     ListView movie_trailers_lv;
     ListView movie_reviews_lv;
     Context context;
-
+    Movies intentReceivedMovie;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +48,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         context = this;
         Intent i = getIntent();
-        Movies mi = i.getExtras().getParcelable("parcelMovie");
+        intentReceivedMovie = i.getExtras().getParcelable("parcelMovie");
 
         movie_poster_iv = (ImageView) findViewById(R.id.movie_poster_iv);
         movie_release_date_tv = (TextView) findViewById(R.id.movie_release_date_tv);
@@ -62,15 +59,15 @@ public class MovieDetailActivity extends AppCompatActivity {
         movie_reviews_lv = (ListView) findViewById(R.id.movie_reviews_lv);
 
 
-        Picasso.with(this).load(getResources().getString(R.string.base_image_url).concat(mi.getMoviePoster())).into(movie_poster_iv);
-        movie_release_date_tv.setText(mi.getMovieReleaseDate());
-        movie_user_rating_tv.setText(mi.getAverageRating() + "");
-        movie_title_tv.setText(mi.getMovieTitle());
-        movie_synopsis_tv.setText(mi.getMovieOverview());
+        Picasso.with(this).load(getResources().getString(R.string.base_image_url).concat(intentReceivedMovie.getMoviePoster())).into(movie_poster_iv);
+        movie_release_date_tv.setText(intentReceivedMovie.getMovieReleaseDate());
+        movie_user_rating_tv.setText(intentReceivedMovie.getAverageRating() + "");
+        movie_title_tv.setText(intentReceivedMovie.getMovieTitle());
+        movie_synopsis_tv.setText(intentReceivedMovie.getMovieOverview());
 
 
-//        MovieVideosAsyncTask videoAsyncTask = new MovieVideosAsyncTask(this, mi.getMovieId(), movie_trailers_lv);
-//        videoAsyncTask.execute();
+        MovieVideosAsyncTask videoAsyncTask = new MovieVideosAsyncTask(this, intentReceivedMovie.getMovieId(), movie_trailers_lv);
+        videoAsyncTask.execute();
 
     }
 
@@ -136,7 +133,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                             .authority(context.getResources().getString(R.string.base_url))
                             .appendPath(context.getResources().getString(R.string.base_url_add1))
                             .appendPath(context.getResources().getString(R.string.base_url_add2))
-                            .appendPath(sort_by)
+                            .appendPath(intentReceivedMovie.getMovieId())
+                            .appendPath("reviews")
                             .appendQueryParameter(OWM_APIKEY, BuildConfig.MOVIES_DB_API_KEY);
                     URL url = new URL(builder.build().toString());
                     // Create the request to OpenWeatherMap, and open the connection

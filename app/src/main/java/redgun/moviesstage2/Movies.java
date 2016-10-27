@@ -12,13 +12,6 @@ import java.util.ArrayList;
  */
 public class Movies implements Parcelable {
 
-    public String getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(String movieId) {
-        this.movieId = movieId;
-    }
 
     @SerializedName("id")
     String movieId;
@@ -51,6 +44,16 @@ public class Movies implements Parcelable {
         this.movieOverview = movieOverview;
         this.averageRating = averageRating;
         this.movieReleaseDate = movieReleaseDate;
+    }
+
+    // "De-parcel object
+    public Movies(Parcel in) {
+        movieId = in.readString();
+        movieTitle = in.readString();
+        moviePoster = in.readString();
+        movieOverview = in.readString();
+        averageRating = in.readDouble();
+        movieReleaseDate = in.readString();
     }
 
     public String getMovieTitle() {
@@ -93,6 +96,14 @@ public class Movies implements Parcelable {
         this.movieReleaseDate = movieReleaseDate;
     }
 
+    public String getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(String movieId) {
+        this.movieId = movieId;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -121,15 +132,7 @@ public class Movies implements Parcelable {
         }
     };
 
-    // "De-parcel object
-    public Movies(Parcel in) {
-        movieId = in.readString();
-        movieTitle = in.readString();
-        moviePoster = in.readString();
-        movieOverview = in.readString();
-        averageRating = in.readDouble();
-        movieReleaseDate = in.readString();
-    }
+
 
 
 }

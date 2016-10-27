@@ -2,12 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
 
     <ImageView
         android:id="@+id/movie_video_icon_iv"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/btn_dropdown"/>
-
+        android:padding_left="@dimen/basic_padding"
+        android:gravity="center"
+        android:background="@mipmap/playicon"/>
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:text="trailor"/>
 </LinearLayout>

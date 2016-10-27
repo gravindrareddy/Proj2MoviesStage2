@@ -8,4 +8,5 @@
     <dimen name="text_movie_details_title_big">40sp</dimen>
     <dimen name="text_movie_details_default">20sp</dimen>
     <dimen name="text_movie_details_synopsis">16sp</dimen>
+    <dimen name="basic_padding">30dp</dimen>
 </resources>

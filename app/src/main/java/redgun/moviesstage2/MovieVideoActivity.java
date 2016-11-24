@@ -2,10 +2,7 @@ package redgun.moviesstage2;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-
 import android.widget.Toast;
-
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -17,7 +14,7 @@ import com.google.android.youtube.player.YouTubePlayerView;
 
 
 public class MovieVideoActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
-    public static final String API_KEY = "YOUR API KEY";
+    public static final String API_KEY = BuildConfig.YOUTUBE_API_KEY;
 
     //http://youtu.be/<VIDEO_ID>
     public static String VIDEO_ID;

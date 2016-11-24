@@ -20,8 +20,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import udacity.redgun.moviesstage2.BuildConfig;
-import udacity.redgun.moviesstage2.R;
+import redgun.moviesstage2.util.Utility;
+import redgun.moviesstage2.BuildConfig;
+import redgun.moviesstage2.R;
 
 /**
  * Created by gravi on 18-10-2016.

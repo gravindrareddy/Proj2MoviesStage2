@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,8 +28,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import udacity.redgun.moviesstage2.BuildConfig;
-import udacity.redgun.moviesstage2.R;
+import redgun.moviesstage2.data.MoviesProvider;
+import redgun.moviesstage2.util.Utility;
 
 public class MoviesGridActivity extends AppCompatActivity {
 
@@ -43,7 +44,6 @@ public class MoviesGridActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movies_grid);
         TAG = this.getClass().getName();
         context = this;
-
 
         movies_gv = (GridView) findViewById(R.id.movies_gv);
         movies_gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -108,14 +108,13 @@ public class MoviesGridActivity extends AppCompatActivity {
         private final String MESSAGE = "MovieDetails";
         private final String REVIEW_MESSAGE = "ReviewDetails";
         private final Context mContext;
+        private boolean DEBUG = true;
+        private ProgressDialog progress;
+        private volatile boolean running = true;
 
         public FetchMoviesTask(Context context) {
             mContext = context;
         }
-
-        private boolean DEBUG = true;
-        private ProgressDialog progress;
-        private volatile boolean running = true;
 
         protected void onPreExecute() {
             if (Utility.isOnline(context)) {
@@ -144,48 +143,58 @@ public class MoviesGridActivity extends AppCompatActivity {
                 HttpURLConnection urlConnection = null;
                 BufferedReader reader = null;
                 String moviesJsonStr = null;
-                try {
-                    Uri.Builder builder = new Uri.Builder();
-                    builder.scheme("https")
-                            .authority(getResources().getString(R.string.base_url))
-                            .appendPath(getResources().getString(R.string.base_url_add1))
-                            .appendPath(getResources().getString(R.string.base_url_add2))
-                            .appendPath(sort_by)
-                            .appendQueryParameter(OWM_APIKEY, BuildConfig.MOVIES_DB_API_KEY);
-                    URL url = new URL(builder.build().toString());
-                    // Create the request to OpenWeatherMap, and open the connection
-                    urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setRequestMethod("GET");
-                    urlConnection.connect();
-                    InputStream inputStream = urlConnection.getInputStream();
-                    if (urlConnection.getResponseCode() == 200) {
-                        Gson gson = new GsonBuilder().create();
-                        APIResponseContract.MoviesAPIResponseEntry moviesResponse = gson.fromJson(new BufferedReader(new InputStreamReader(inputStream)), APIResponseContract.MoviesAPIResponseEntry.class);
-                        moviesList = moviesResponse.movies;
 
-                    } else {
-                        Utility.showToast(context, "Something went wrong");
-                    }
+                if (!sort_by.equals(getResources().getString(R.string.pref_sort_favorite))) {
+                    try {
+                        Uri.Builder builder = new Uri.Builder();
+                        builder.scheme("https")
+                                .authority(getResources().getString(R.string.base_url))
+                                .appendPath(getResources().getString(R.string.base_url_add1))
+                                .appendPath(getResources().getString(R.string.base_url_add2))
+                                .appendPath(sort_by)
+                                .appendQueryParameter(OWM_APIKEY, BuildConfig.MOVIES_DB_API_KEY);
+                        URL url = new URL(builder.build().toString());
+                        // Create the request to OpenWeatherMap, and open the connection
+                        urlConnection = (HttpURLConnection) url.openConnection();
+                        urlConnection.setRequestMethod("GET");
+                        urlConnection.connect();
+                        InputStream inputStream = urlConnection.getInputStream();
+                        if (urlConnection.getResponseCode() == 200) {
+                            Gson gson = new GsonBuilder().create();
+                            APIResponseContract.MoviesAPIResponseEntry moviesResponse = gson.fromJson(new BufferedReader(new InputStreamReader(inputStream)), APIResponseContract.MoviesAPIResponseEntry.class);
+                            moviesList = moviesResponse.movies;
+
+                        } else {
+                            Utility.showToast(context, "Something went wrong");
+                        }
 
 
-                } catch (IOException e) {
-                    Log.e("PlaceholderFragment", "Error ", e);
-                    e.printStackTrace();
-                    // If the code didn't successfully get the weather data, there's no point in attemping
-                    // to parse it.
-                    return null;
-                } finally {
-                    if (urlConnection != null) {
-                        urlConnection.disconnect();
-                    }
-                    if (reader != null) {
-                        try {
-                            reader.close();
-                        } catch (final IOException e) {
-                            Log.e("PlaceholderFragment12", "Error closing stream", e.fillInStackTrace());
-                            e.printStackTrace();
+                    } catch (IOException e) {
+                        Log.e("PlaceholderFragment", "Error ", e);
+                        e.printStackTrace();
+                        // If the code didn't successfully get the weather data, there's no point in attemping
+                        // to parse it.
+                        return null;
+                    } finally {
+                        if (urlConnection != null) {
+                            urlConnection.disconnect();
+                        }
+                        if (reader != null) {
+                            try {
+                                reader.close();
+                            } catch (final IOException e) {
+                                Log.e("PlaceholderFragment12", "Error closing stream", e.fillInStackTrace());
+                                e.printStackTrace();
+                            }
                         }
                     }
+                } else {
+                    Uri.Builder builder = new Uri.Builder();
+                    Uri _uri = builder.scheme("content")
+                            .authority(getResources().getString(R.string.contentprovider_authority))
+                            .appendPath(getResources().getString(R.string.contentprovider_movie_entry)).build();
+                    Cursor _cursor = getContentResolver().query(_uri, null, null, null, null);
+                    //ToDo cursor adapter
                 }
             }
             return moviesList;

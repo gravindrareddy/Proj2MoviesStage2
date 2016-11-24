@@ -3,7 +3,6 @@ package redgun.moviesstage2;
 import android.content.Intent;
 import android.os.Bundle;
 
-import udacity.redgun.moviesstage2.R;
 
 import android.widget.Toast;
 

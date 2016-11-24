@@ -10,7 +10,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -24,9 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import udacity.redgun.moviesstage2.BuildConfig;
-import udacity.redgun.moviesstage2.R;
-
+import redgun.moviesstage2.util.Utility;
 /**
  * Created by gravi on 18-10-2016.
  */

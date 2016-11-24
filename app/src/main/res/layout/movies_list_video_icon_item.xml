@@ -9,7 +9,7 @@
         android:id="@+id/movie_video_icon_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding_left="@dimen/basic_padding"
+
         android:gravity="center"
         android:background="@mipmap/playicon"/>
     <TextView

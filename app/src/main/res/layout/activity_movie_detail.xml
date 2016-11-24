@@ -30,6 +30,7 @@
             android:gravity="left"
             android:padding="@dimen/padding_small" />
 
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,6 +59,12 @@
                 android:text="Rating"
                 android:textSize="@dimen/text_movie_details_default"
                 android:textStyle="italic" />
+
+            <ToggleButton
+                android:id="@+id/movie_favorite_tb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
         </LinearLayout>
 
         <TextView
@@ -73,17 +80,15 @@
 
         <ListView
             android:id="@+id/movie_trailers_lv"
-            android:layout_below="@id/movie_synopsis_tv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </ListView>
+            android:layout_height="wrap_content"
+            android:layout_below="@id/movie_synopsis_tv"></ListView>
 
         <ListView
             android:id="@+id/movie_reviews_lv"
-            android:layout_below="@id/movie_trailers_lv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </ListView>
+            android:layout_height="wrap_content"
+            android:layout_below="@id/movie_trailers_lv"></ListView>
 
     </RelativeLayout>
 </ScrollView>

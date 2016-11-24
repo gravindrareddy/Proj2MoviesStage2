@@ -1,6 +1,7 @@
 package redgun.moviesstage2;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,9 +11,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,8 +29,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import udacity.redgun.moviesstage2.BuildConfig;
-import udacity.redgun.moviesstage2.R;
+import redgun.moviesstage2.data.MoviesContract;
+import redgun.moviesstage2.util.Utility;
 
 
 public class MovieDetailActivity extends AppCompatActivity {
@@ -39,8 +42,11 @@ public class MovieDetailActivity extends AppCompatActivity {
     TextView movie_synopsis_tv;
     ListView movie_trailers_lv;
     ListView movie_reviews_lv;
+    ToggleButton movie_favorite_tb;
     Context context;
     Movies intentReceivedMovie;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,13 +63,40 @@ public class MovieDetailActivity extends AppCompatActivity {
         movie_synopsis_tv = (TextView) findViewById(R.id.movie_synopsis_tv);
         movie_trailers_lv = (ListView) findViewById(R.id.movie_trailers_lv);
         movie_reviews_lv = (ListView) findViewById(R.id.movie_reviews_lv);
-
+        movie_favorite_tb = (ToggleButton) findViewById(R.id.movie_favorite_tb);
 
         Picasso.with(this).load(getResources().getString(R.string.base_image_url).concat(intentReceivedMovie.getMoviePoster())).into(movie_poster_iv);
         movie_release_date_tv.setText(intentReceivedMovie.getMovieReleaseDate());
         movie_user_rating_tv.setText(intentReceivedMovie.getAverageRating() + "");
         movie_title_tv.setText(intentReceivedMovie.getMovieTitle());
         movie_synopsis_tv.setText(intentReceivedMovie.getMovieOverview());
+
+
+        movie_favorite_tb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // save this movie to DB
+                    ContentValues movieContentValues = new ContentValues();
+                    movieContentValues.put(MoviesContract.MovieEntry.COLUMN_MOVIE_ID, intentReceivedMovie.getMovieId());
+                    movieContentValues.put(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE, intentReceivedMovie.getMovieReleaseDate());
+                    movieContentValues.put(MoviesContract.MovieEntry.COLUMN_TITLE, intentReceivedMovie.getMovieTitle());
+                    movieContentValues.put(MoviesContract.MovieEntry.COLUMN_SYNOPSIS, intentReceivedMovie.getMovieOverview());
+                    movieContentValues.put(MoviesContract.MovieEntry.COLUMN_MOVIE_POSTER, intentReceivedMovie.getMoviePoster());
+
+
+//                    Uri.Builder builder = new Uri.Builder();
+//                    Uri _uri = builder.scheme("content")
+//                            .authority(getResources().getString(R.string.contentprovider_authority))
+//                            .appendPath(getResources().getString(R.string.contentprovider_movie_entry)).build();
+                    getContentResolver().insert(MoviesContract.MovieEntry.CONTENT_URI, movieContentValues);
+
+
+                } else {
+                    String[] selectionArgs = {intentReceivedMovie.getMovieId()};
+                    getContentResolver().delete(MoviesContract.MovieEntry.CONTENT_URI, MoviesContract.MovieEntry.COLUMN_MOVIE_ID, selectionArgs);
+                }
+            }
+        });
 
 
         MovieVideosAsyncTask videoAsyncTask = new MovieVideosAsyncTask(this, intentReceivedMovie.getMovieId(), movie_trailers_lv);
@@ -90,16 +123,13 @@ public class MovieDetailActivity extends AppCompatActivity {
         private final String LOG_TAG = MovieReviewsAsyncTask1.class.getSimpleName();
         private final String MESSAGE = "MovieDetails";
         private final String REVIEW_MESSAGE = "ReviewDetails";
-
-
+        private boolean DEBUG = true;
+        private ProgressDialog progress1;
+        private volatile boolean running = true;
 
         public MovieReviewsAsyncTask1() {
 
         }
-
-        private boolean DEBUG = true;
-        private ProgressDialog progress1;
-        private volatile boolean running = true;
 
         protected void onPreExecute() {
             if (Utility.isOnline(context)) {

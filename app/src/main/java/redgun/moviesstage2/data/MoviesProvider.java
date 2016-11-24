@@ -40,29 +40,7 @@ public class MoviesProvider extends ContentProvider {
         sWeatherByLocationSettingQueryBuilder = new SQLiteQueryBuilder();
     }
 
-    //movies.selected_movie_id = ?
-    private static final String sMovieSelection =
-            MoviesContract.MovieEntry.TABLE_NAME +
-                    "." + MoviesContract.MovieEntry.COLUMN_MOVIE_ID + " = ? ";
 
-
-    private Cursor getMovieDetailsBySelection(Uri uri, String[] projection, String sortOrder) {
-        String movieSelection = MoviesContract.MovieEntry.getMovieFromUri(uri);
-
-        String[] selectionArgs;
-        String selection;
-        selection = sMovieSelection;
-        selectionArgs = new String[]{movieSelection};
-
-        return sWeatherByLocationSettingQueryBuilder.query(mOpenHelper.getReadableDatabase(),
-                null,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
-    }
 
 
     /*
@@ -89,8 +67,7 @@ public class MoviesProvider extends ContentProvider {
     }
 
     /*
-        Students: We've coded this for you.  We just create a new MoviesDbHelper for later use
-        here.
+        We just create a new MoviesDbHelper for later use here.
      */
     @Override
     public boolean onCreate() {
@@ -110,10 +87,10 @@ public class MoviesProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
 
         switch (match) {
-            // Student: Uncomment and fill out these two cases
+            // MOVIE_DETAILS return only item where as movies return multiple entries
 
             case MOVIE_DETAILS:
-                return MoviesContract.MovieEntry.CONTENT_TYPE;
+                return MoviesContract.MovieEntry.CONTENT_ITEM_TYPE;
             case MOVIES:
                 return MoviesContract.MovieEntry.CONTENT_TYPE;
 
@@ -255,5 +232,29 @@ public class MoviesProvider extends ContentProvider {
     public void shutdown() {
         mOpenHelper.close();
         super.shutdown();
+    }
+
+
+
+    //movies.selected_movie_id = ?
+    private static final String sMovieSelection =
+            MoviesContract.MovieEntry.TABLE_NAME +
+                    "." + MoviesContract.MovieEntry.COLUMN_MOVIE_ID + " = ? ";
+
+
+    private Cursor getMovieDetailsBySelection(Uri uri, String[] projection, String sortOrder) {
+        String movieSelection = MoviesContract.MovieEntry.getMovieFromUri(uri);
+
+        String selection = sMovieSelection;
+        String[] selectionArgs = new String[]{movieSelection};
+
+        return sWeatherByLocationSettingQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                null,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
     }
 }

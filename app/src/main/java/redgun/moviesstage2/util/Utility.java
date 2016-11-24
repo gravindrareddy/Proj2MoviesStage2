@@ -1,4 +1,4 @@
-package redgun.moviesstage2;
+package redgun.moviesstage2.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
-import udacity.redgun.moviesstage2.R;
+import redgun.moviesstage2.R;
 
 
 /**

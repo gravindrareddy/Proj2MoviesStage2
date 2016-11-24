@@ -24,7 +24,6 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
-import udacity.redgun.moviesstage2.R;
 
 
 /**

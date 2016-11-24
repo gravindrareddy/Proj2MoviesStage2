@@ -11,7 +11,6 @@ import com.google.android.youtube.player.YouTubePlayerView;
 
 import java.util.ArrayList;
 
-import udacity.redgun.moviesstage2.R;
 
 
 /**

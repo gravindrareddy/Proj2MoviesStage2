@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="udacity.redgun.moviesstage2">
+    package="redgun.moviesstage2">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="redgun.moviesstage2.MoviesGridActivity">
+        <activity android:name=".MoviesGridActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,14 +19,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="redgun.moviesstage2.MovieDetailActivity"
+            android:name=".MovieDetailActivity"
             android:label="@string/title_activity_movie_detail">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="redgun.moviesstage2.MoviesGridActivity" />
+                android:value=".MoviesGridActivity" />
         </activity>
         <activity
-            android:name="redgun.moviesstage2.SettingsActivity"
+            android:name=".SettingsActivity"
             android:label="@string/action_settings" />
         <!--
      ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -37,6 +37,9 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name="redgun.moviesstage2.MovieVideoActivity"></activity>
+        <provider
+            android:authorities="redgun.moviesstage2"
+            android:name=".data.MoviesProvider"/>
     </application>
 
 </manifest>

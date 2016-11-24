@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import udacity.redgun.moviesstage2.R;
+import redgun.moviesstage2.R;
 
 
 /**

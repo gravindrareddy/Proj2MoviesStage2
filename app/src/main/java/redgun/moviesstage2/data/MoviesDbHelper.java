@@ -45,11 +45,12 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
                 MoviesContract.MovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
 
                 // the ID of the location entry associated with this weather data
-                MoviesContract.MovieEntry.COLUMN_RELEASE_DATE + " INTEGER NOT NULL, " +
-                MoviesContract.MovieEntry.COLUMN_DATE + " INTEGER NOT NULL, " +
-                MoviesContract.MovieEntry.COLUMN_SYNOPSIS + " TEXT NOT NULL, " +
+                MoviesContract.MovieEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
+                MoviesContract.MovieEntry.COLUMN_RELEASE_DATE + " INTEGER, " +
+                MoviesContract.MovieEntry.COLUMN_DATE + " INTEGER, " +
+                MoviesContract.MovieEntry.COLUMN_SYNOPSIS + " TEXT, " +
                 MoviesContract.MovieEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
-                MoviesContract.MovieEntry.COLUMN_MOVIE_POSTER + " TEXT NOT NULL);";
+                MoviesContract.MovieEntry.COLUMN_MOVIE_POSTER + " TEXT);";
         sqLiteDatabase.execSQL(SQL_CREATE_MOVIE_TABLE);
 
     }

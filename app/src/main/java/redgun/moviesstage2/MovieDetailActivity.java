@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -43,7 +45,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     ListView movie_trailers_lv;
     ListView movie_reviews_lv;
     ToggleButton movie_favorite_tb;
-    Context context;
+    Context mContext;
     Movies intentReceivedMovie;
 
 
@@ -52,7 +54,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        context = this;
+        mContext = this;
         Intent i = getIntent();
         intentReceivedMovie = i.getExtras().getParcelable("parcelMovie");
 
@@ -92,9 +94,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         });
 
 
-        MovieVideosAsyncTask videoAsyncTask = new MovieVideosAsyncTask(this, intentReceivedMovie.getMovieId(), movie_trailers_lv);
-        videoAsyncTask.execute();
-
     }
 
     @Override
@@ -108,6 +107,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         super.onStart();
         MovieReviewsAsyncTask1 reviewAsyncTask = new MovieReviewsAsyncTask1();
         reviewAsyncTask.execute();
+
+        MovieVideosAsyncTask videoAsyncTask = new MovieVideosAsyncTask();
+        videoAsyncTask.execute();
 
     }
 
@@ -125,8 +127,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
 
         protected void onPreExecute() {
-            if (Utility.isOnline(context)) {
-                progress1 = new ProgressDialog(context);
+            if (Utility.isOnline(mContext)) {
+                progress1 = new ProgressDialog(mContext);
                 progress1.show();
             } else {
                 cancel(true);
@@ -145,17 +147,17 @@ public class MovieDetailActivity extends AppCompatActivity {
             if (!isCancelled()) {
                 // URL for calling the API is needed
                 final String OWM_APIKEY = "api_key";
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                String sort_by = prefs.getString(context.getString(R.string.pref_sort_key), context.getString(R.string.pref_sort_top));
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+                String sort_by = prefs.getString(mContext.getString(R.string.pref_sort_key), mContext.getString(R.string.pref_sort_top));
                 HttpURLConnection urlConnection = null;
                 BufferedReader reader = null;
                 String moviesJsonStr = null;
                 try {
                     Uri.Builder builder = new Uri.Builder();
                     builder.scheme("https")
-                            .authority(context.getResources().getString(R.string.base_url))
-                            .appendPath(context.getResources().getString(R.string.base_url_add1))
-                            .appendPath(context.getResources().getString(R.string.base_url_add2))
+                            .authority(mContext.getResources().getString(R.string.base_url))
+                            .appendPath(mContext.getResources().getString(R.string.base_url_add1))
+                            .appendPath(mContext.getResources().getString(R.string.base_url_add2))
                             .appendPath(intentReceivedMovie.getMovieId())
                             .appendPath("reviews")
                             .appendQueryParameter(OWM_APIKEY, BuildConfig.MOVIES_DB_API_KEY);
@@ -171,7 +173,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                         moviesReviewsList = moviesResponse.movieReviews;
 
                     } else {
-                        Utility.showToast(context, "Something went wrong");
+                        Utility.showToast(mContext, "Something went wrong");
                     }
 
 
@@ -204,9 +206,113 @@ public class MovieDetailActivity extends AppCompatActivity {
             if (responseMovieReviewsList == null) {
                 //Utility.showToast(mContext, "No Movies Available. Please try again");
             } else {
-                movie_reviews_lv.setAdapter(new MovieReviewsAdapter(context, responseMovieReviewsList));
+                movie_reviews_lv.setAdapter(new MovieReviewsAdapter(mContext, responseMovieReviewsList));
             }
             progress1.dismiss();
+        }
+    }
+
+
+    public class MovieVideosAsyncTask extends AsyncTask<MovieVideos, Void, ArrayList<MovieVideos>> {
+
+        private final String LOG_TAG = MovieVideosAsyncTask.class.getSimpleName();
+
+
+        private volatile boolean running = true;
+        private ProgressDialog progress;
+
+        protected void onPreExecute() {
+            if (Utility.isOnline(mContext)) {
+                progress = new ProgressDialog(mContext);
+                progress.show();
+            } else {
+                cancel(true);
+            }
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onCancelled() {
+            running = false;
+        }
+
+        @Override
+        protected ArrayList<MovieVideos> doInBackground(MovieVideos... params) {
+            ArrayList<MovieVideos> moviesTrailersList = new ArrayList<MovieVideos>();
+            if (!isCancelled()) {
+                // URL for calling the API is needed
+                final String OWM_APIKEY = "api_key";
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+                //String sort_by = prefs.getString(mContext.getString(R.string.pref_sort_key), mContext.getString(R.string.pref_sort_top));
+                HttpURLConnection urlConnection = null;
+                BufferedReader reader = null;
+                String moviesJsonStr = null;
+                try {
+                    Uri.Builder builder = new Uri.Builder();
+                    builder.scheme("https")
+                            .authority(mContext.getResources().getString(R.string.base_url))
+                            .appendPath(mContext.getResources().getString(R.string.base_url_add1))
+                            .appendPath(mContext.getResources().getString(R.string.base_url_add2))
+                            .appendPath(intentReceivedMovie.getMovieId())
+                            .appendPath(mContext.getResources().getString(R.string.base_url_videos))
+                            .appendQueryParameter(OWM_APIKEY, BuildConfig.MOVIES_DB_API_KEY);
+                    URL url = new URL(builder.build().toString());
+                    Log.i("VideosAynscTask", url.getPath());
+                    // Create the request to OpenWeatherMap, and open the connection
+                    urlConnection = (HttpURLConnection) url.openConnection();
+                    urlConnection.setRequestMethod("GET");
+                    urlConnection.connect();
+                    InputStream inputStream = urlConnection.getInputStream();
+                    if (urlConnection.getResponseCode() == 200) {
+                        Gson gson = new GsonBuilder().create();
+                        APIResponseContract.MovieTrailersAPIResponseEntry moviesResponse = gson.fromJson(new BufferedReader(new InputStreamReader(inputStream)), APIResponseContract.MovieTrailersAPIResponseEntry.class);
+                        moviesTrailersList = moviesResponse.movieTrailers;
+
+                    } else {
+                        Utility.showToast(mContext, "Something went wrong");
+                    }
+
+
+                } catch (IOException e) {
+                    Log.e("PlaceholderFragment", "Error ", e);
+                    e.printStackTrace();
+                    // If the code didn't successfully get the data, there's no point in attempting
+                    // to parse it.
+                    return null;
+                } finally {
+                    if (urlConnection != null) {
+                        urlConnection.disconnect();
+                    }
+                    if (reader != null) {
+                        try {
+                            reader.close();
+                        } catch (final IOException e) {
+                            Log.e("PlaceholderFragment12", "Error closing stream", e.fillInStackTrace());
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            return moviesTrailersList;
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(final ArrayList<MovieVideos> responseMovieTrailersList) {
+            if (responseMovieTrailersList == null) {
+                //    Utility.showToast(mContext, "No Movies Available. Please try again");
+            } else {
+                movie_trailers_lv.setAdapter(new MovieVideosAdapter(mContext, responseMovieTrailersList));
+                movie_trailers_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                        // Send intent to SingleViewActivity
+                        Intent i = new Intent(mContext, MovieVideoActivity.class);
+                        i.putExtra("videoKey", responseMovieTrailersList.get(position).getKey());
+                        mContext.startActivity(i);
+                    }
+                });
+            }
+            progress.dismiss();
         }
     }
 }

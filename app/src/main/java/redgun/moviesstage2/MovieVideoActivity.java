@@ -1,8 +1,10 @@
 package redgun.moviesstage2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
+
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -12,46 +14,20 @@ import com.google.android.youtube.player.YouTubePlayer.PlayerStateChangeListener
 import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerView;
 
+import redgun.moviesstage2.util.Utility;
+
 
 public class MovieVideoActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
     public static final String API_KEY = BuildConfig.YOUTUBE_API_KEY;
 
     //http://youtu.be/<VIDEO_ID>
     public static String VIDEO_ID;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        /** attaching layout xml **/
-        setContentView(R.layout.movies_video_item);
-        Intent i = getIntent();
-        VIDEO_ID = i.getExtras().getString("videoKey");
-        /** Initializing YouTube player view **/
-        YouTubePlayerView youTubePlayerView = (YouTubePlayerView) findViewById(R.id.movie_trailer_yv);
-        youTubePlayerView.initialize(API_KEY, this);
-    }
-
-    @Override
-    public void onInitializationFailure(Provider provider, YouTubeInitializationResult result) {
-        Toast.makeText(this, "Failured to Initialize!", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onInitializationSuccess(Provider provider, YouTubePlayer player, boolean wasRestored) {
-        /** add listeners to YouTubePlayer instance **/
-        player.setPlayerStateChangeListener(playerStateChangeListener);
-        player.setPlaybackEventListener(playbackEventListener);
-
-        /** Start buffering **/
-        if (!wasRestored) {
-            player.cueVideo(VIDEO_ID);
-        }
-    }
-
+    Context mContext;
     private PlaybackEventListener playbackEventListener = new PlaybackEventListener() {
 
         @Override
         public void onBuffering(boolean arg0) {
+            Utility.showToast(mContext, "Buffering");
         }
 
         @Override
@@ -60,6 +36,7 @@ public class MovieVideoActivity extends YouTubeBaseActivity implements YouTubePl
 
         @Override
         public void onPlaying() {
+            Utility.showToast(mContext, "Playing");
         }
 
         @Override
@@ -71,7 +48,6 @@ public class MovieVideoActivity extends YouTubeBaseActivity implements YouTubePl
         }
 
     };
-
     private PlayerStateChangeListener playerStateChangeListener = new PlayerStateChangeListener() {
 
         @Override
@@ -98,4 +74,34 @@ public class MovieVideoActivity extends YouTubeBaseActivity implements YouTubePl
         public void onVideoStarted() {
         }
     };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        /** attaching layout xml **/
+        setContentView(R.layout.movies_video_item);
+        Intent i = getIntent();
+        mContext = this;
+        VIDEO_ID = i.getExtras().getString("videoKey");
+        /** Initializing YouTube player view **/
+        YouTubePlayerView youTubePlayerView = (YouTubePlayerView) findViewById(R.id.movie_trailer_yv);
+        youTubePlayerView.initialize(API_KEY, this);
+    }
+
+    @Override
+    public void onInitializationFailure(Provider provider, YouTubeInitializationResult result) {
+        Toast.makeText(this, "Failured to Initialize!", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onInitializationSuccess(Provider provider, YouTubePlayer player, boolean wasRestored) {
+        /** add listeners to YouTubePlayer instance **/
+        player.setPlayerStateChangeListener(playerStateChangeListener);
+        player.setPlaybackEventListener(playbackEventListener);
+
+        /** Start buffering **/
+        if (!wasRestored) {
+            player.cueVideo(VIDEO_ID);
+        }
+    }
 }

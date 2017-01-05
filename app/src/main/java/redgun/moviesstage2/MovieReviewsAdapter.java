@@ -1,19 +1,13 @@
 package redgun.moviesstage2;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
-
-import redgun.moviesstage2.R;
 
 
 /**
@@ -54,7 +48,6 @@ public class MovieReviewsAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
         Holder holder;
         View rowView = convertView;
         if (rowView == null) {
@@ -66,7 +59,6 @@ public class MovieReviewsAdapter extends BaseAdapter {
         } else {
             holder = (Holder) convertView.getTag();
         }
-        //TODO Use Picasso example
         holder.movie_review_content_tv.setText(result.get(position).getReview());
         holder.movie_reviewer_tv.setText(result.get(position).getReviewer());
         return rowView;

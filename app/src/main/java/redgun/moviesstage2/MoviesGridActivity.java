@@ -28,7 +28,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import redgun.moviesstage2.data.MoviesProvider;
+import redgun.moviesstage2.data.MoviesContract;
 import redgun.moviesstage2.util.Utility;
 
 public class MoviesGridActivity extends AppCompatActivity {
@@ -51,7 +51,7 @@ public class MoviesGridActivity extends AppCompatActivity {
                 // Send intent to SingleViewActivity
                 Intent i = new Intent(getApplicationContext(), MovieDetailActivity.class);
                 Movies selectedMovie = moviesList.get(position);
-                Movies parcelMovie = new Movies(selectedMovie.getMovieId(), selectedMovie.getMovieTitle(), selectedMovie.getMoviePoster(), selectedMovie.getMovieOverview(), selectedMovie.getAverageRating(), selectedMovie.getMovieReleaseDate());
+                Movies parcelMovie = new Movies(selectedMovie.getMovieId(), selectedMovie.getMovieTitle(), selectedMovie.getMoviePoster(), selectedMovie.getMovieOverview(), selectedMovie.getAverageRating(), selectedMovie.getMovieReleaseDate(), selectedMovie.isFavorite());
                 i.putExtra("parcelMovie", parcelMovie);
                 startActivity(i);
             }
@@ -120,6 +120,12 @@ public class MoviesGridActivity extends AppCompatActivity {
             if (Utility.isOnline(context)) {
                 progress = new ProgressDialog(context);
                 progress.show();
+                //initialize if it is empty & ensure that is it emptied
+                if (moviesList == null) {
+                    moviesList = new ArrayList<Movies>();
+                } else
+                    moviesList.clear();
+
             } else {
                 cancel(true);
             }
@@ -194,7 +200,27 @@ public class MoviesGridActivity extends AppCompatActivity {
                             .authority(getResources().getString(R.string.contentprovider_authority))
                             .appendPath(getResources().getString(R.string.contentprovider_movie_entry)).build();
                     Cursor _cursor = getContentResolver().query(_uri, null, null, null, null);
-                    //ToDo cursor adapter
+                    if (_cursor != null) {
+                        if (_cursor.moveToFirst()) {
+                            do {
+
+                                Movies m = new Movies(_cursor.getString(_cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_MOVIE_ID)),
+                                        _cursor.getString(_cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_TITLE)),
+                                        _cursor.getString(_cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_MOVIE_POSTER)),
+                                        _cursor.getString(_cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_SYNOPSIS)),
+                                        _cursor.getString(_cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_MOVIE_RATING)),
+                                        _cursor.getString(_cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE)),
+                                        true);
+                                moviesList.add(m);
+                            } while (_cursor.moveToNext());
+                        }
+                    }
+                    _cursor.close();
+//                    for (int z = 0; z <= 2; z++) {
+//                        Movies m = new Movies("278", "title" + z, "/9O7gLzmreU0nGkIB6K3BsJbzvNv.jpg", "overview" + z, 5.0, "releasedate" + z);
+//                        moviesList.add(m);
+//                    }
+
                 }
             }
             return moviesList;
@@ -204,10 +230,12 @@ public class MoviesGridActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final ArrayList<Movies> responseMoviesList) {
             moviesList = responseMoviesList;
-            if (moviesList == null) {
-                Utility.showToast(context, "No Movies Available. Please try again");
-            } else {
+            if (!(moviesList == null)) {
                 movies_gv.setAdapter(new MoviesGridAdapter(context, moviesList));
+            }
+
+            if (moviesList == null || (moviesList != null && moviesList.size() == 0)) {
+                Utility.showToast(context, "No Movies Available. Please try again");
             }
             progress.dismiss();
         }

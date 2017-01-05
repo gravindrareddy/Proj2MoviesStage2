@@ -87,6 +87,7 @@ public class MoviesContract {
 
         //store the local storage path instead of blob
         public static final String COLUMN_MOVIE_POSTER = "movie_poster";
+        public static final String COLUMN_MOVIE_RATING = "movie_rating";
 
         /**
          * to fetch favourite movie details

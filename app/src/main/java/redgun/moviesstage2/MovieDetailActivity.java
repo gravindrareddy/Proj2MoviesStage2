@@ -70,7 +70,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         movie_user_rating_tv.setText(intentReceivedMovie.getAverageRating() + "");
         movie_title_tv.setText(intentReceivedMovie.getMovieTitle());
         movie_synopsis_tv.setText(intentReceivedMovie.getMovieOverview());
-
+        movie_favorite_tb.setChecked(intentReceivedMovie.isFavorite());
 
         movie_favorite_tb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

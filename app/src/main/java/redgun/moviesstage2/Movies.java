@@ -13,37 +13,42 @@ import java.util.ArrayList;
 public class Movies implements Parcelable {
 
 
+    // Creator
+    public static final Parcelable.Creator CREATOR
+            = new Parcelable.Creator() {
+        public Movies createFromParcel(Parcel in) {
+            return new Movies(in);
+        }
+
+        public Movies[] newArray(int size) {
+            return new Movies[size];
+        }
+    };
     @SerializedName("id")
     String movieId;
-
     @SerializedName("title")
     String movieTitle;
-
     @SerializedName("poster_path")
     String moviePoster;
-
     @SerializedName("overview")
     String movieOverview;
-
     @SerializedName("vote_average")
-    double averageRating;
-
+    String averageRating;
     @SerializedName("release_date")
     String movieReleaseDate;
-
     @SerializedName("reviews")
     ArrayList<MovieReviews> movieReviews;
-
+    boolean favorite;
     ArrayList<String> movieTrailers;
 
-
-    Movies(String movieId, String movieTitle, String moviePoster, String movieOverview, double averageRating, String movieReleaseDate) {
+    Movies(String movieId, String movieTitle, String moviePoster, String movieOverview, String averageRating, String movieReleaseDate, boolean isFavorite) {
         this.movieId = movieId;
         this.movieTitle = movieTitle;
         this.moviePoster = moviePoster;
         this.movieOverview = movieOverview;
         this.averageRating = averageRating;
         this.movieReleaseDate = movieReleaseDate;
+        this.favorite = isFavorite;
     }
 
     // "De-parcel object
@@ -52,8 +57,17 @@ public class Movies implements Parcelable {
         movieTitle = in.readString();
         moviePoster = in.readString();
         movieOverview = in.readString();
-        averageRating = in.readDouble();
+        averageRating = in.readString();
         movieReleaseDate = in.readString();
+        favorite = in.readByte() != 0;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 
     public String getMovieTitle() {
@@ -80,11 +94,11 @@ public class Movies implements Parcelable {
         this.movieOverview = movieOverview;
     }
 
-    public double getAverageRating() {
+    public String getAverageRating() {
         return averageRating;
     }
 
-    public void setAverageRating(double averageRating) {
+    public void setAverageRating(String averageRating) {
         this.averageRating = averageRating;
     }
 
@@ -109,30 +123,16 @@ public class Movies implements Parcelable {
         return 0;
     }
 
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(movieId);
         dest.writeString(movieTitle);
         dest.writeString(moviePoster);
         dest.writeString(movieOverview);
-        dest.writeDouble(averageRating);
+        dest.writeString(averageRating);
         dest.writeString(movieReleaseDate);
+        dest.writeByte((byte) (favorite ? 1 : 0));
     }
-
-    // Creator
-    public static final Parcelable.Creator CREATOR
-            = new Parcelable.Creator() {
-        public Movies createFromParcel(Parcel in) {
-            return new Movies(in);
-        }
-
-        public Movies[] newArray(int size) {
-            return new Movies[size];
-        }
-    };
-
-
 
 
 }

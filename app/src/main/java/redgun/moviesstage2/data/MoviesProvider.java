@@ -22,32 +22,29 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.graphics.Movie;
 import android.net.Uri;
 
 public class MoviesProvider extends ContentProvider {
 
-    // The URI Matcher used by this content provider.
-    private static final UriMatcher sUriMatcher = buildUriMatcher();
-    private MoviesDbHelper mOpenHelper;
-
     static final int MOVIES = 100;
     static final int MOVIE_DETAILS = 101;
-
+    // The URI Matcher used by this content provider.
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
     private static final SQLiteQueryBuilder sWeatherByLocationSettingQueryBuilder;
+    //movies.selected_movie_id = ?
+    private static final String sMovieSelection =
+            MoviesContract.MovieEntry.TABLE_NAME +
+                    "." + MoviesContract.MovieEntry.COLUMN_MOVIE_ID + " = ? ";
 
     static {
         sWeatherByLocationSettingQueryBuilder = new SQLiteQueryBuilder();
     }
 
-
-
+    private MoviesDbHelper mOpenHelper;
 
     /*
-        Students: Here is where you need to create the UriMatcher. This UriMatcher will
-        match each URI to the WEATHER, WEATHER_WITH_LOCATION, WEATHER_WITH_LOCATION_AND_DATE,
-        and LOCATION integer constants defined above.  You can test this by uncommenting the
-        testUriMatcher test within TestUriMatcher.
+        This UriMatcher will match each URI to the MOVIES, MOVIE_DETAILS
+        constants defined above.
      */
     static UriMatcher buildUriMatcher() {
         // I know what you're thinking.  Why create a UriMatcher when you can use regular
@@ -196,7 +193,6 @@ public class MoviesProvider extends ContentProvider {
         }
     }
 
-
     @Override
     public int bulkInsert(Uri uri, ContentValues[] values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -233,14 +229,6 @@ public class MoviesProvider extends ContentProvider {
         mOpenHelper.close();
         super.shutdown();
     }
-
-
-
-    //movies.selected_movie_id = ?
-    private static final String sMovieSelection =
-            MoviesContract.MovieEntry.TABLE_NAME +
-                    "." + MoviesContract.MovieEntry.COLUMN_MOVIE_ID + " = ? ";
-
 
     private Cursor getMovieDetailsBySelection(Uri uri, String[] projection, String sortOrder) {
         String movieSelection = MoviesContract.MovieEntry.getMovieFromUri(uri);

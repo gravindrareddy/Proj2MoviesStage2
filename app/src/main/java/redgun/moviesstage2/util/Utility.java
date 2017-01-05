@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import redgun.moviesstage2.R;
@@ -37,12 +36,7 @@ public class Utility {
         if (netInfo != null && netInfo.isConnectedOrConnecting()) {
             return true;
         } else {
-            new AlertDialog.Builder(_context)
-                    .setTitle(_context.getResources().getString(R.string.app_name))
-                    .setMessage(
-                            _context.getResources().getString(
-                                    R.string.internet_error))
-                    .setPositiveButton("OK", null).show();
+            showToast(_context, "No Internet!!");
         }
         return false;
     }

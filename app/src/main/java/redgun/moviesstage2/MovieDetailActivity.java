@@ -82,6 +82,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                     movieContentValues.put(MoviesContract.MovieEntry.COLUMN_TITLE, intentReceivedMovie.getMovieTitle());
                     movieContentValues.put(MoviesContract.MovieEntry.COLUMN_SYNOPSIS, intentReceivedMovie.getMovieOverview());
                     movieContentValues.put(MoviesContract.MovieEntry.COLUMN_MOVIE_POSTER, intentReceivedMovie.getMoviePoster());
+                    movieContentValues.put(MoviesContract.MovieEntry.COLUMN_MOVIE_RATING, intentReceivedMovie.getAverageRating());
                     getContentResolver().insert(MoviesContract.MovieEntry.CONTENT_URI, movieContentValues);
                 } else {
                     String[] selectionArgs = {intentReceivedMovie.getMovieId()};

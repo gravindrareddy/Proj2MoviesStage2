@@ -82,15 +82,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                     movieContentValues.put(MoviesContract.MovieEntry.COLUMN_TITLE, intentReceivedMovie.getMovieTitle());
                     movieContentValues.put(MoviesContract.MovieEntry.COLUMN_SYNOPSIS, intentReceivedMovie.getMovieOverview());
                     movieContentValues.put(MoviesContract.MovieEntry.COLUMN_MOVIE_POSTER, intentReceivedMovie.getMoviePoster());
-
-
-//                    Uri.Builder builder = new Uri.Builder();
-//                    Uri _uri = builder.scheme("content")
-//                            .authority(getResources().getString(R.string.contentprovider_authority))
-//                            .appendPath(getResources().getString(R.string.contentprovider_movie_entry)).build();
                     getContentResolver().insert(MoviesContract.MovieEntry.CONTENT_URI, movieContentValues);
-
-
                 } else {
                     String[] selectionArgs = {intentReceivedMovie.getMovieId()};
                     getContentResolver().delete(MoviesContract.MovieEntry.CONTENT_URI, MoviesContract.MovieEntry.COLUMN_MOVIE_ID + " =?", selectionArgs);

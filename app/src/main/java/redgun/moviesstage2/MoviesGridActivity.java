@@ -117,7 +117,8 @@ public class MoviesGridActivity extends AppCompatActivity {
         }
 
         protected void onPreExecute() {
-            if (Utility.isOnline(context)) {
+            //Favorites should work even with no network
+            if (Utility.isOnline(context) || (PreferenceManager.getDefaultSharedPreferences(context).getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_top)).equals(getResources().getString(R.string.pref_sort_favorite)))) {
                 progress = new ProgressDialog(context);
                 progress.show();
                 //initialize if it is empty & ensure that is it emptied

@@ -93,7 +93,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                 } else {
                     String[] selectionArgs = {intentReceivedMovie.getMovieId()};
-                    getContentResolver().delete(MoviesContract.MovieEntry.CONTENT_URI, MoviesContract.MovieEntry.COLUMN_MOVIE_ID, selectionArgs);
+                    getContentResolver().delete(MoviesContract.MovieEntry.CONTENT_URI, MoviesContract.MovieEntry.COLUMN_MOVIE_ID + " =?", selectionArgs);
                 }
             }
         });

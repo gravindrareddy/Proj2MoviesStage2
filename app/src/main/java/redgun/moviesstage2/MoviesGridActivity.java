@@ -47,15 +47,33 @@ public class MoviesGridActivity extends AppCompatActivity {
 
         movies_gv = (GridView) findViewById(R.id.movies_gv);
         movies_gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                // Send intent to SingleViewActivity
-                Intent i = new Intent(getApplicationContext(), MovieDetailActivity.class);
-                Movies selectedMovie = moviesList.get(position);
-                Movies parcelMovie = new Movies(selectedMovie.getMovieId(), selectedMovie.getMovieTitle(), selectedMovie.getMoviePoster(), selectedMovie.getMovieOverview(), selectedMovie.getAverageRating(), selectedMovie.getMovieReleaseDate(), selectedMovie.isFavorite());
-                i.putExtra("parcelMovie", parcelMovie);
-                startActivity(i);
-            }
-        });
+                                             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                                                 // Send intent to SingleViewActivity
+                                                 Intent i = new Intent(getApplicationContext(), MovieDetailActivity.class);
+                                                 Movies selectedMovie = moviesList.get(position);
+
+                                                 /* Check if selected movie is already in favorite list. If so, set favorite to true
+                                                  */
+                                                 if (!(PreferenceManager.getDefaultSharedPreferences(context).getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_top)).equals(getResources().getString(R.string.pref_sort_favorite)))) {
+                                                     Uri.Builder builder = new Uri.Builder();
+                                                     Uri _uri = builder.scheme("content")
+                                                             .authority(getResources().getString(R.string.contentprovider_authority))
+                                                             .appendPath(getResources().getString(R.string.contentprovider_movie_entry)).build();
+                                                     String[] selectionArgs = {selectedMovie.getMovieId()};
+                                                     Cursor _cursor = getContentResolver().query(_uri, null, MoviesContract.MovieEntry.COLUMN_MOVIE_ID + " =?", selectionArgs, null);
+                                                     if (_cursor != null && _cursor.getCount() > 0) {
+                                                         selectedMovie.setFavorite(true);
+                                                     }
+                                                     _cursor.close();
+                                                 }
+
+                                                 Movies parcelMovie = new Movies(selectedMovie.getMovieId(), selectedMovie.getMovieTitle(), selectedMovie.getMoviePoster(), selectedMovie.getMovieOverview(), selectedMovie.getAverageRating(), selectedMovie.getMovieReleaseDate(), selectedMovie.isFavorite());
+                                                 i.putExtra("parcelMovie", parcelMovie);
+                                                 startActivity(i);
+                                             }
+                                         }
+
+        );
     }
 
 

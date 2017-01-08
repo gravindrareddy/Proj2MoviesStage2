@@ -12,6 +12,10 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -29,7 +33,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import redgun.moviesstage2.data.MoviesContract;
 import redgun.moviesstage2.util.Utility;
@@ -68,7 +75,17 @@ public class MovieDetailActivity extends AppCompatActivity {
         movie_favorite_tb = (ToggleButton) findViewById(R.id.movie_favorite_tb);
 
         Picasso.with(this).load(getResources().getString(R.string.base_image_url).concat(intentReceivedMovie.getMoviePoster())).into(movie_poster_iv);
-        movie_release_date_tv.setText(intentReceivedMovie.getMovieReleaseDate());
+        String year = "";
+        Date date = new Date();
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            year = android.text.format.DateFormat.format("yyyy", format.parse(intentReceivedMovie.getMovieReleaseDate())).toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        movie_release_date_tv.setText(year);
         movie_user_rating_tv.setText(intentReceivedMovie.getAverageRating() + "");
         movie_title_tv.setText(intentReceivedMovie.getMovieTitle());
         movie_synopsis_tv.setText(intentReceivedMovie.getMovieOverview());

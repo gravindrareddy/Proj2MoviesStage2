@@ -26,8 +26,13 @@
                 android:value=".MoviesGridActivity" />
         </activity>
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/action_settings" />
+            android:name=".SettingsFragment"
+            android:label="@string/action_settings"
+            android:parentActivityName=".MoviesGridActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MoviesGridActivity" />
+        </activity>
         <!--
      ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -36,10 +41,15 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name="redgun.moviesstage2.MovieVideoActivity"></activity>
+        <activity
+            android:name=".MovieVideoActivity"
+            android:label="@string/title_activity_movie_trailer" />
+
         <provider
-            android:authorities="redgun.moviesstage2"
-            android:name=".data.MoviesProvider"/>
+            android:name=".data.MoviesProvider"
+            android:authorities="redgun.moviesstage2" />
+
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>

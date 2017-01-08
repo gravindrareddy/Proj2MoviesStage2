@@ -2,6 +2,9 @@
     <string name="app_name">MoviesStage2</string>
     <string name="title_activity_movie_detail">MovieDetailActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_movie_trailer">Trailer</string>
+    <string name="on_mark_as_fav_toggle_text">Favorite</string>
+    <string name="off_mark_as_fav_toggle_text">Favorite</string>
     <string name="pref_sort_label">Sort</string>
     <string name="pref_sort_key" translatable="false">sort</string>
     <string name="pref_sort_label_popular" translatable="false">Popular</string>

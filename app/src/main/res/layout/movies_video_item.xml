@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include layout="@layout/default_toolbar" />
+
     <com.google.android.youtube.player.YouTubePlayerView
         android:id="@+id/movie_trailer_yv"
         android:layout_width="match_parent"

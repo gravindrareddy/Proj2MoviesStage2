@@ -3,6 +3,9 @@ package redgun.moviesstage2;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
@@ -80,6 +83,14 @@ public class MovieVideoActivity extends YouTubeBaseActivity implements YouTubePl
         super.onCreate(savedInstanceState);
         /** attaching layout xml **/
         setContentView(R.layout.movies_video_item);
+        Toolbar bar = (Toolbar) findViewById(R.id.toolbar);
+        bar.setTitle(getResources().getString(R.string.title_activity_movie_trailer));
+        bar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         Intent i = getIntent();
         mContext = this;
         VIDEO_ID = i.getExtras().getString("videoKey");

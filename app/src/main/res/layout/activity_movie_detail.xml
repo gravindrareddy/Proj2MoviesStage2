@@ -64,6 +64,8 @@
                 android:id="@+id/movie_favorite_tb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textOn="@string/on_mark_as_fav_toggle_text"
+                android:textOff="@string/off_mark_as_fav_toggle_text"
                 />
         </LinearLayout>
 

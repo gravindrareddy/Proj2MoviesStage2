@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<redgun.moviesstage2.util.CustomScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:fillViewport="true"
+    android:nestedScrollingEnabled="true"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -64,9 +65,8 @@
                 android:id="@+id/movie_favorite_tb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textOn="@string/on_mark_as_fav_toggle_text"
-                android:textOff="@string/off_mark_as_fav_toggle_text"
-                />
+                android:textOff="Favorite"
+                android:textOn="Favorite" />
         </LinearLayout>
 
         <TextView
@@ -80,17 +80,47 @@
             android:text="Synopsis"
             android:textSize="@dimen/text_movie_details_synopsis" />
 
-        <ListView
-            android:id="@+id/movie_trailers_lv"
+        <LinearLayout
+            android:id="@+id/movie_trailers_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/movie_synopsis_tv"></ListView>
+            android:layout_below="@id/movie_synopsis_tv"
+            android:orientation="vertical">
 
-        <ListView
-            android:id="@+id/movie_reviews_lv"
+            <TextView
+                style="@style/MovieDetailsSubHeaderStyle"
+                android:text="@string/trailers_text" />
+
+            <ListView
+                android:id="@+id/movie_trailers_lv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></ListView>
+
+            <TextView
+                android:id="@+id/empty_trailers_tv"
+                style="@style/MovieDetailsEmptyListStyle"
+                android:text="@string/empty_trailers_text" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/movie_trailers_lv"></ListView>
+            android:layout_below="@id/movie_trailers_ll"
+            android:orientation="vertical">
 
+            <TextView
+                style="@style/MovieDetailsSubHeaderStyle"
+                android:text="@string/reviews_text" />
+
+            <ListView
+                android:id="@+id/movie_reviews_lv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></ListView>
+
+            <TextView
+                android:id="@+id/empty_reviews_tv"
+                style="@style/MovieDetailsEmptyListStyle"
+                android:text="@string/empty_reviews_text" />
+        </LinearLayout>
     </RelativeLayout>
-</ScrollView>
+</redgun.moviesstage2.util.CustomScrollView>

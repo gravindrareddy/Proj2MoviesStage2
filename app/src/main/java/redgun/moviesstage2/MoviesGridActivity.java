@@ -101,20 +101,48 @@ public class MoviesGridActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * If, there is no change in settings with resp to sort order, then, don't fetch movie list from the API
+     * And in this case, scroll list to the selected movie
+     * Else, fetch movies list from either API or DB based on new sort order
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        int index = movies_gv.getFirstVisiblePosition();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor edit = prefs.edit();
+        edit.putInt(context.getString(R.string.pref_grid_index_key), index);
+        edit.putString(context.getString(R.string.pref_sort_priority_before_navigation_to_settings), PreferenceManager.getDefaultSharedPreferences(context).getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_top)));
+        edit.commit();
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
-        //updateMovie();
-        // todo get the user preference of sort order
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        /**
+         * Space as default value to pref_sort_priority_before_navigation_to_settings is intentional to ensure no conflict with first launch
+         */
+        String pref_sort_priority_before_navigation_to_settings = prefs.getString(context.getString(R.string.pref_sort_priority_before_navigation_to_settings),
+                "");
+
+        if (!PreferenceManager.getDefaultSharedPreferences(context).getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_top)).equals(pref_sort_priority_before_navigation_to_settings)) {
+            FetchMoviesTask moviesTask = new FetchMoviesTask(context);
+            moviesTask.execute();
+        } else {
+            int index = prefs.getInt(context.getString(R.string.pref_grid_index_key),
+                    0);
+            movies_gv.smoothScrollToPosition(index);
+        }
     }
-
-    public void onStart() {
-        super.onStart();
-        FetchMoviesTask moviesTask = new FetchMoviesTask(context);
-        moviesTask.execute();
-
-    }
-
 
     /**
      * Method to fetch Movies list from API

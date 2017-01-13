@@ -77,6 +77,11 @@ public class SettingsActivity extends PreferenceActivity
                         .getString(preference.getKey(), ""));
     }
 
+    /**
+     * @param preference
+     * @param value
+     * @return
+     */
     @Override
     public boolean onPreferenceChange(Preference preference, Object value) {
         String stringValue = value.toString();

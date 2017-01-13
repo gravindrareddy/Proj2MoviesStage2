@@ -69,22 +69,34 @@
                 android:textOn="Favorite" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/movie_synopsis_tv"
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:id="@+id/movie_synopsis_ll"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/movie_poster_iv"
-            android:layout_gravity="center"
-            android:gravity="left"
-            android:padding="@dimen/padding_small"
-            android:text="Synopsis"
-            android:textSize="@dimen/text_movie_details_synopsis" />
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/MovieDetailsSubHeaderStyle"
+                android:text="@string/synopsis_text" />
+
+            <TextView
+                android:id="@+id/movie_synopsis_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="left"
+                android:padding="@dimen/padding_small"
+                android:text="Synopsis"
+                android:textSize="@dimen/text_movie_details_synopsis" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/movie_trailers_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/movie_synopsis_tv"
+            android:layout_below="@id/movie_synopsis_ll"
             android:orientation="vertical">
 
             <TextView
@@ -94,7 +106,8 @@
             <ListView
                 android:id="@+id/movie_trailers_lv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></ListView>
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"></ListView>
 
             <TextView
                 android:id="@+id/empty_trailers_tv"
@@ -115,7 +128,8 @@
             <ListView
                 android:id="@+id/movie_reviews_lv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></ListView>
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"></ListView>
 
             <TextView
                 android:id="@+id/empty_reviews_tv"

@@ -25,6 +25,7 @@
     <string name="internet_error">No Internet!!</string>
     <string name="trailers_text">Trailers</string>
     <string name="reviews_text">Reviews</string>
+    <string name="synopsis_text">Synopsis</string>
     <string name="empty_trailers_text">No Trailers Available</string>
     <string name="empty_reviews_text">No Reviews Available</string>
 
